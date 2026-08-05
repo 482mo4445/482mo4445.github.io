@@ -1,4 +1,4 @@
-MSc AI E-Portfolio
+#MSc AI E-Portfolio#
 
 Personal e-portfolio for the MSc in Artificial Intelligence at the University of Essex. Static site — plain HTML/CSS/JS, hosted on GitHub Pages.
 
