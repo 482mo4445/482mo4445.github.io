@@ -9,7 +9,7 @@ Static site — plain HTML/CSS/JS, hosted on GitHub Pages.
 
 |---|---|
 
-| `index.html` | Homepage — bento grid of all 8 modules, skills, and contact |
+| `index.html` | Homepage |
 
 | `module-01.html` | Launch into Computing |
 
@@ -26,5 +26,3 @@ Static site — plain HTML/CSS/JS, hosted on GitHub Pages.
 | `module-07.html` | Research Methods & Professional Practice |
 
 | `module-08.html` | MSc Computing Project |
-
-
