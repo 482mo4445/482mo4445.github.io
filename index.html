@@ -1,366 +1,242 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MSc AI — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink: #15102A;
-    --paper: #F4EEFA;
-    --paper-dim: #E8DFF3;
-    --coral: #FF5C4D;
-    --gold: #FFC24B;
-    --teal: #21C7B8;
-    --violet: #7B5CFA;
-    --text-on-dark: #F4EEFA;
-    --text-soft-on-dark: #B6ACD1;
-    --line: rgba(244,238,250,0.14);
-    --radius: 20px;
-  }
-
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-
-  body{
-    margin:0;
-    background: var(--ink);
-    color: var(--text-on-dark);
-    font-family: 'Manrope', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    overflow-x: hidden;
-  }
-
-  ::selection{ background: var(--coral); color: var(--ink); }
-  a{ color: inherit; }
-
-  /* ---------- Ambient wavy backdrop ---------- */
-  .wave-field{
-    position: fixed; left:0; right:0; bottom:0; height: 46vh; min-height: 260px;
-    z-index: 0; pointer-events: none; overflow: hidden;
-  }
-  .wave-wrap{ position:absolute; bottom:0; left:0; display:flex; width:4800px; }
-  .wave-track{ width: 2400px; height: 100%; flex-shrink:0; display:block; }
-  .wave-back  .wave-wrap{ animation: waveScroll 34s linear infinite; opacity: 0.22; }
-  .wave-mid   .wave-wrap{ animation: waveScrollRev 24s linear infinite; opacity: 0.28; }
-  .wave-front .wave-wrap{ animation: waveScroll 16s linear infinite; opacity: 0.9; }
-  .wave-field{ }
-  .wave-back, .wave-mid, .wave-front{ position:absolute; left:0; right:0; bottom:0; height:100%; overflow:hidden; }
-
-  @keyframes waveScroll{ from{ transform: translateX(0); } to{ transform: translateX(-2400px); } }
-  @keyframes waveScrollRev{ from{ transform: translateX(-2400px); } to{ transform: translateX(0); } }
-
-  @media (prefers-reduced-motion: reduce){
-    .wave-back .wave-wrap, .wave-mid .wave-wrap, .wave-front .wave-wrap{ animation: none; }
-  }
-
-  /* ---------- Crash-landing entrance ---------- */
-  .reveal{
-    opacity:0;
-    --rot: -5deg;
-    transform: translateY(-170px) rotate(var(--rot)) scale(0.92);
-  }
-  .reveal:nth-child(even){ --rot: 5deg; }
-  .reveal:nth-child(3n){ --rot: -3deg; }
-  .reveal.in{ animation: crashLand 0.85s cubic-bezier(.17,.89,.32,1.45) forwards; }
-
-  @keyframes crashLand{
-    0%{ opacity:0; transform: translateY(-170px) rotate(var(--rot)) scale(0.92); }
-    55%{ opacity:1; transform: translateY(8px) rotate(calc(var(--rot) * -0.35)) scale(1.03); }
-    75%{ transform: translateY(-4px) rotate(calc(var(--rot) * 0.12)) scale(0.985); }
-    100%{ opacity:1; transform: translateY(0) rotate(0deg) scale(1); }
-  }
-
-  .card.reveal{ position: relative; }
-  .card.reveal::before{
-    content:''; position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0;
-    background: radial-gradient(circle at 50% 105%, rgba(255,255,255,0.65), transparent 62%);
-  }
-  .card.reveal.in::before{ animation: impactFlash 0.55s ease-out forwards; animation-delay: 0.42s; }
-  @keyframes impactFlash{ 0%{ opacity:0.95; } 100%{ opacity:0; } }
-
-  @media (prefers-reduced-motion: reduce){
-    .reveal{ transition: none !important; animation: none !important; opacity:1; transform:none; }
-    .card.reveal::before{ display:none; }
-  }
-
-  /* ---------- Nav ---------- */
-  nav{
-    position: sticky; top:0; z-index: 50;
-    display:flex; align-items:center; justify-content: space-between;
-    padding: 18px 6vw;
-    background: rgba(21,16,42,0.6);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--line);
-  }
-  .brand{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.05rem; letter-spacing: -0.01em; }
-  .brand span{ color: var(--coral); }
-  .navlinks{ display:flex; gap: 28px; font-size:0.9rem; font-weight:500; }
-  .navlinks a{ text-decoration:none; color: var(--text-soft-on-dark); position:relative; padding-bottom:2px; }
-  .navlinks a:hover{ color: var(--text-on-dark); }
-  .navlinks a::after{
-    content:''; position:absolute; left:0; bottom:-2px; width:0; height:2px;
-    background: var(--gold); transition: width .25s ease;
-  }
-  .navlinks a:hover::after{ width:100%; }
-
-  /* ---------- Layout ---------- */
-  main{ max-width: 1180px; margin: 0 auto; padding: 0 6vw 120px; position:relative; z-index:1; }
-
-  /* ---------- Hero ---------- */
-  .hero{ padding: 90px 0 60px; display:grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items:end; }
-  .eyebrow{
-    font-family:'JetBrains Mono', monospace; font-size:0.78rem; letter-spacing:.08em;
-    color: var(--gold); text-transform: uppercase; margin-bottom: 18px; display:block;
-  }
-  .hero h1{
-    font-family:'Space Grotesk', sans-serif; font-weight:700;
-    font-size: clamp(2.4rem, 5vw, 4.2rem); line-height:1.02; letter-spacing:-0.02em; margin:0;
-    background: linear-gradient(100deg, var(--text-on-dark) 30%, var(--coral) 55%, var(--gold) 75%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero-sub{ color: var(--text-soft-on-dark); font-size:1.05rem; line-height:1.6; max-width: 34ch; }
-  .hero-meta{
-    font-family:'JetBrains Mono', monospace; font-size:0.85rem; color: var(--text-soft-on-dark);
-    display:flex; flex-direction:column; gap:10px; padding-bottom: 6px;
-  }
-  .hero-meta b{ color: var(--text-on-dark); font-weight:500; }
-
-  /* ---------- Bento grid ---------- */
-  .bento{ display:grid; grid-template-columns: repeat(6, 1fr); gap: 18px; margin-top: 30px; }
-  .card{
-    background: var(--paper); color: var(--ink);
-    border: 1px solid transparent;
-    border-radius: var(--radius);
-    padding: 26px;
-    position: relative;
-    overflow:hidden;
-    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
-  }
-  .card:hover{ transform: translateY(-6px) rotate(-0.6deg); box-shadow: 0 24px 44px -18px rgba(123,92,250,0.45); }
-  .card:nth-child(even):hover{ transform: translateY(-6px) rotate(0.6deg); }
-
-  .tab{
-    position:absolute; top:0; right: 22px;
-    font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:.05em;
-    padding: 5px 10px; border-radius: 0 0 8px 8px;
-    text-transform: uppercase; font-weight:500;
-  }
-  .tab.done{ background: var(--teal); color: var(--ink); }
-  .tab.progress{ background: var(--gold); color: var(--ink); }
-  .tab.upcoming{ background: var(--coral); color: var(--ink); }
-
-  .card:hover .tab.done{ box-shadow: 0 0 0 6px rgba(33,199,184,0.25); }
-  .card:hover .tab.progress{ box-shadow: 0 0 0 6px rgba(255,194,75,0.25); }
-  .card:hover .tab.upcoming{ box-shadow: 0 0 0 6px rgba(255,92,77,0.25); }
-
-  .card-link{ text-decoration:none; display:block; cursor:pointer; }
-  .open-hint{
-    display:inline-block; margin-top: 12px; font-family:'JetBrains Mono', monospace; font-size:0.72rem;
-    color: var(--violet); opacity:0; transform: translateX(-6px); transition: opacity .25s ease, transform .25s ease;
-  }
-  .card-link:hover .open-hint{ opacity:1; transform: translateX(0); }
-
-  .card .num{ font-family:'JetBrains Mono', monospace; font-size:0.75rem; color: #6E6390; margin-bottom: 14px; display:block; }
-  .card h3{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; margin:0 0 8px; letter-spacing:-0.01em; }
-  .card p{ color: #4B4368; font-size:0.88rem; line-height:1.55; margin:0; }
-
-  .c-about{ grid-column: span 3; grid-row: span 2; background: linear-gradient(135deg, var(--violet), #5A3FE0); color:#fff; }
-  .c-about h3{ color:#fff; font-size:1.4rem; }
-  .c-about p{ color: rgba(255,255,255,0.82); }
-
-  .c-skills{ grid-column: span 3; grid-row: span 2; }
-  .skill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
-  .pill{
-    font-family:'JetBrains Mono', monospace; font-size:0.75rem;
-    border:1px solid #D6C9EF; border-radius: 999px; padding: 6px 12px; color: var(--ink);
-    transition: background .2s ease, color .2s ease, transform .2s ease;
-  }
-  .pill:hover{ background: var(--coral); color:#fff; border-color: var(--coral); transform: translateY(-2px); }
-
-  .mod{ grid-column: span 2; min-height: 180px; }
-  .mod.wide{ grid-column: span 3; }
-
-  .c-contact{
-    grid-column: span 6; background: linear-gradient(120deg, #1E1740, #2A1B4D);
-    color:#fff; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: 18px;
-  }
-  .c-contact h3{ color:#fff; font-size:1.3rem; }
-  .c-contact p{ color: rgba(244,238,250,0.65); }
-  .btn{
-    font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:500;
-    background: linear-gradient(100deg, var(--coral), var(--gold)); color: var(--ink); border:none;
-    padding: 13px 22px; border-radius: 999px; cursor:pointer; transition: transform .2s ease, box-shadow .2s ease;
-  }
-  .btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(255,92,77,0.55); }
-
-  footer{ text-align:center; padding: 34px 0 60px; color: var(--text-soft-on-dark); font-size:0.8rem; font-family:'JetBrains Mono', monospace; position:relative; z-index:1; }
-
-  @media (max-width: 860px){
-    .hero{ grid-template-columns: 1fr; }
-    .bento{ grid-template-columns: repeat(2, 1fr); }
-    .c-about, .c-skills, .mod.wide, .c-contact{ grid-column: span 2; }
-    .navlinks{ display:none; }
-  }
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02 Study Cards - Interactive Flashcards for AWS Cloud Practitioner Exam Prep</title>
+    <meta name="description" content="AWS Cloud Practitioner Flashcards is a web-based study tool for CLF-C02 preparation, featuring interactive AWS service cards, category-based practice, session results, and support for local offline study without installation.">
+    <meta name="keywords" content="AWS, CLF-C02, Cloud Practitioner, flashcards, study tool, exam prep, AWS services, offline study">
+    <meta name="author" content="482mo4445">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://github.com/482mo4445/aws-clf-c02-study-cards">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin: 0 0 10px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin: 40px 0 15px;
+            color: #16213e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #e0e6ed;
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 1.2rem;
+            margin: 25px 0 10px;
+            color: #0f3460;
+        }
+        p {
+            margin: 0 0 16px;
+        }
+        a {
+            color: #e94560;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .badge-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #e94560, #c23152);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 0 20px;
+        }
+        .badge-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+            text-decoration: none;
+        }
+        .badge-link i {
+            margin-right: 10px;
+        }
+        .download-section {
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin: 30px 0;
+        }
+        .download-section h2 {
+            margin-top: 0;
+            border-bottom: none;
+        }
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            background: #f0f2f5;
+            margin: 10px 0;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            border-left: 4px solid #e94560;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            border: 1px solid #e8ecf1;
+        }
+        .feature-card strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #0f3460;
+        }
+        .feature-card p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        .tip-box {
+            background: #e8f4f8;
+            padding: 18px 22px;
+            border-radius: 12px;
+            border-left: 5px solid #17a2b8;
+            margin: 20px 0;
+        }
+        .faq-item {
+            margin: 12px 0;
+        }
+        .faq-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .badge-link { padding: 14px 24px; font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>📇 aws-clf-c02-study-cards - Master the AWS Cloud Practitioner Exam</h1>
+    <p style="font-size:1.1rem; margin-bottom:20px;">Interactive, offline-friendly flashcards designed to help you pass the CLF-C02 certification with confidence.</p>
 
-<div class="wave-field" aria-hidden="true">
-  <div class="wave-back">
-    <div class="wave-wrap">
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#7B5CFA" d="M0,220 C150,160 450,280 600,220 C750,160 1050,280 1200,220 C1350,160 1650,280 1800,220 C1950,160 2250,280 2400,220 L2400,400 L0,400 Z"/></svg>
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#7B5CFA" d="M0,220 C150,160 450,280 600,220 C750,160 1050,280 1200,220 C1350,160 1650,280 1800,220 C1950,160 2250,280 2400,220 L2400,400 L0,400 Z"/></svg>
+    <a href="https://github.com/482mo4445/aws-clf-c02-study-cards" class="badge-link">⬇️ Download Now - Free & Offline</a>
+
+    <h2>🎯 What Is This Tool?</h2>
+    <p><strong>AWS Cloud Practitioner Flashcards</strong> is a simple yet powerful web-based study application built for anyone preparing for the <strong>AWS Certified Cloud Practitioner (CLF-C02)</strong> exam. No installation required — just download, open, and start learning. It runs entirely in your browser and works offline after the initial download.</p>
+
+    <h2>✨ Key Features</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <strong>🃏 Interactive AWS Service Cards</strong>
+            <p>Flip through detailed cards covering core AWS services, pricing models, architecture, security, and more.</p>
+        </div>
+        <div class="feature-card">
+            <strong>📂 Category-Based Practice</strong>
+            <p>Focus on specific domains like compute, storage, database, networking, or security to target weak areas.</p>
+        </div>
+        <div class="feature-card">
+            <strong>📊 Session Results</strong>
+            <p>Track your progress with instant feedback after each study session. See which topics need more review.</p>
+        </div>
+        <div class="feature-card">
+            <strong>🌐 Local & Offline</strong>
+            <p>Study anywhere — on a plane, in a café, or at home — without needing an internet connection after download.</p>
+        </div>
     </div>
-  </div>
-  <div class="wave-mid">
-    <div class="wave-wrap">
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#21C7B8" d="M0,260 C180,200 420,320 600,260 C780,200 1020,320 1200,260 C1380,200 1620,320 1800,260 C1980,200 2220,320 2400,260 L2400,400 L0,400 Z"/></svg>
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#21C7B8" d="M0,260 C180,200 420,320 600,260 C780,200 1020,320 1200,260 C1380,200 1620,320 1800,260 C1980,200 2220,320 2400,260 L2400,400 L0,400 Z"/></svg>
+
+    <h2>🚀 Getting Started on Windows</h2>
+    <p>Follow these three simple steps to start studying in under 2 minutes.</p>
+
+    <div class="download-section">
+        <h2>📥 Download & Install</h2>
+        <p><strong>Step 1:</strong> Visit the official download page:</p>
+        <p><a href="https://github.com/482mo4445/aws-clf-c02-study-cards" class="badge-link" style="padding:12px 24px; font-size:1rem;">🌐 Visit this link to download the application</a></p>
+        <p><strong>Step 2:</strong> On the GitHub page, click the green <strong>"Code"</strong> button, then select <strong>"Download ZIP"</strong>. Alternatively, scroll down to the <strong>Releases</strong> section and download the latest release ZIP file.</p>
+        <p><strong>Step 3:</strong> Once the ZIP file is downloaded, right-click it and choose <strong>"Extract All"</strong>. Pick a folder (e.g., Desktop or Documents), then extract.</p>
+        <p><strong>Step 4:</strong> Open the extracted folder and double-click <strong>index.html</strong>. It will open in your default web browser. That's it — you're ready to study!</p>
+        <div class="tip-box">
+            <strong>💡 Pro Tip:</strong> Bookmark the <code>index.html</code> file or create a shortcut on your desktop for quick access. Since everything runs locally, you can even rename the folder and move it anywhere.
+        </div>
     </div>
-  </div>
-  <div class="wave-front">
-    <div class="wave-wrap">
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#241B47" d="M0,300 C200,250 400,340 600,300 C800,250 1000,340 1200,300 C1400,250 1600,340 1800,300 C2000,250 2200,340 2400,300 L2400,400 L0,400 Z"/></svg>
-      <svg class="wave-track" viewBox="0 0 2400 400" preserveAspectRatio="none"><path fill="#241B47" d="M0,300 C200,250 400,340 600,300 C800,250 1000,340 1200,300 C1400,250 1600,340 1800,300 C2000,250 2200,340 2400,300 L2400,400 L0,400 Z"/></svg>
+
+    <h2>🧠 How to Use the Flashcards</h2>
+    <ul class="step-list">
+        <li><strong>1. Choose a category</strong> from the main menu — e.g., "Compute", "Storage", "Security", or "All Cards".</li>
+        <li><strong>2. Click or tap</strong> a card to flip it and reveal the answer or explanation on the back.</li>
+        <li><strong>3. Rate yourself</strong> — mark cards as "Known" or "Need Review" to filter them later.</li>
+        <li><strong>4. Review session results</strong> at the end to see your accuracy and focus on weak areas.</li>
+    </ul>
+
+    <h2>❓ Frequently Asked Questions</h2>
+    <div class="faq-item">
+        <strong>Do I need to install anything?</strong>
+        <p>No. The app runs directly in your browser. You only need to download and extract the ZIP file, then open <code>index.html</code>.</p>
     </div>
-  </div>
+    <div class="faq-item">
+        <strong>Does it work offline?</strong>
+        <p>Yes. After the initial download, no internet connection is required. All flashcards and logic are stored locally.</p>
+    </div>
+    <div class="faq-item">
+        <strong>Is it free?</strong>
+        <p>Absolutely. This is an open-source project, completely free to use and share.</p>
+    </div>
+    <div class="faq-item">
+        <strong>Can I add my own cards?</strong>
+        <p>Yes! You can edit the data file inside the folder (usually a JavaScript or JSON file) to add or modify cards. Instructions are included in the package.</p>
+    </div>
+
+    <h2>📈 Study Tips for CLF-C02</h2>
+    <p>The AWS Cloud Practitioner exam tests your understanding of AWS cloud concepts, core services, security, pricing, and support. Use these flashcards daily for 15-20 minutes. Focus on one category per session, then mix them up. Review session results to identify patterns — if you consistently miss storage questions, spend extra time on that category.</p>
+    <div class="tip-box">
+        <strong>📚 Recommended Study Plan:</strong><br>
+        Week 1-2: AWS Core Services (Compute, Storage, Database)<br>
+        Week 3: Security & Compliance<br>
+        Week 4: Pricing, Billing, and Support<br>
+        Week 5: Mixed practice and weak area review<br>
+        Week 6: Full mock sessions
+    </div>
+
+    <h2>🔒 Privacy & Security</h2>
+    <p>This tool runs entirely on your computer. No data is sent to any server. Your study progress and session results are stored only in your browser's local storage and never leave your device.</p>
+
+    <h2>🛠️ Technical Details</h2>
+    <p>The application is built with plain HTML, CSS, and JavaScript. No external dependencies, no tracking scripts, no ads. It's designed to be lightweight, fast, and portable. Works on any modern browser (Chrome, Firefox, Edge, Safari).</p>
+
+    <h2>💬 Need Help?</h2>
+    <p>If you encounter any issues or have suggestions, visit the <a href="https://github.com/482mo4445/aws-clf-c02-study-cards">GitHub repository</a> and open an issue. The community and maintainers are happy to assist.</p>
+
+    <hr style="margin:40px 0 20px; border:0; border-top:1px solid #ddd;">
+    <p style="text-align:center; color:#777; font-size:0.9rem;">Happy studying! 🎉 Pass the CLF-C02 with confidence.</p>
 </div>
-
-<nav>
-  <div class="brand">essex<span>.msc</span>.ai</div>
-  <div class="navlinks">
-    <a href="#modules">Modules</a>
-    <a href="#skills">Skills</a>
-    <a href="#contact">Contact</a>
-  </div>
-</nav>
-
-<main>
-  <section class="hero">
-    <div>
-      <span class="eyebrow">E-Portfolio · 2025–2026</span>
-      <h1>MSc Artificial<br>Intelligence</h1>
-      <p class="hero-sub" style="margin-top:22px;">A record of my coursework, projects and materials for each module — University of Essex.</p>
-    </div>
-    <div class="hero-meta">
-      <div>Institution — <b>University of Essex</b></div>
-      <div>Programme — <b>9 modules, MSc Computing</b></div>
-      <div>Progress — <b>3 completed, 1 in progress</b></div>
-    </div>
-  </section>
-
-  <section class="bento" id="modules">
-    <article class="card c-about reveal">
-      <span class="num">/ about</span>
-      <h3>From algorithms to models, one module at a time.</h3>
-      <p>This portfolio brings together projects, code and reflections for every module on the course, with files I can upload for each project.</p>
-    </article>
-
-    <article class="card c-skills reveal" id="skills">
-      <span class="num">/ skills</span>
-      <h3>Tools in use</h3>
-      <p>The technologies I've applied in my projects so far.</p>
-      <div class="skill-row">
-        <span class="pill">Python</span>
-        <span class="pill">Weka</span>
-        <span class="pill">Machine Learning</span>
-        <span class="pill">Data Analysis</span>
-      </div>
-    </article>
-
-    <a class="card mod wide reveal card-link" href="module-01.html">
-      <span class="tab done">Completed</span>
-      <span class="num">01</span>
-      <h3>Launch into Computing</h3>
-      <p>Fundamentals of programming and computational thinking.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod wide reveal card-link" href="module-02.html">
-      <span class="tab done">Completed</span>
-      <span class="num">02</span>
-      <h3>Understanding Artificial Intelligence</h3>
-      <p>Key concepts and the history of artificial intelligence.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-03.html">
-      <span class="tab done">Completed</span>
-      <span class="num">03</span>
-      <h3>Numerical Analysis</h3>
-      <p>Numerical methods and their computational application.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-04.html">
-      <span class="tab progress">In progress</span>
-      <span class="num">04</span>
-      <h3>Intelligent Agents</h3>
-      <p>Designing intelligent agents and their environments.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-05.html">
-      <span class="tab upcoming">Not yet started</span>
-      <span class="num">05</span>
-      <h3>Machine Learning</h3>
-      <p>Supervised and unsupervised learning models.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-06.html">
-      <span class="tab upcoming">Not yet started</span>
-      <span class="num">06</span>
-      <h3>Knowledge Representation &amp; Reasoning</h3>
-      <p>Formal representation of knowledge.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-07.html">
-      <span class="tab upcoming">Not yet started</span>
-      <span class="num">07</span>
-      <h3>Research Methods &amp; Professional Practice</h3>
-      <p>Research methodology and professional practice.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <a class="card mod reveal card-link" href="module-08.html">
-      <span class="tab upcoming">Not yet started</span>
-      <span class="num">08</span>
-      <h3>MSc Computing Project</h3>
-      <p>The final dissertation project of the Master's course.</p>
-      <span class="open-hint">Open module →</span>
-    </a>
-
-    <article class="card c-contact reveal" id="contact">
-      <div>
-        <h3>Want to see the projects in more detail?</h3>
-        <p>Every module includes files, code and notes I can upload.</p>
-      </div>
-      <button class="btn">Get in touch →</button>
-    </article>
-  </section>
-</main>
-
-<footer>© 2026 — built for the MSc in Artificial Intelligence</footer>
-
-<script>
-  const items = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if(entry.isIntersecting){
-        setTimeout(() => entry.target.classList.add('in'), i * 60);
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  items.forEach(el => io.observe(el));
-</script>
-
 </body>
 </html>
